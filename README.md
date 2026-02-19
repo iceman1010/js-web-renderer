@@ -233,6 +233,56 @@ js-web-renderer https://app.put.io/files --wait 3 \
 ## Maintenance
 
 Installed: 2026-01-04
-Last Updated: 2026-01-29
+Last Updated: 2026-02-19
 Chromium Version: 143.0.7499.146
 Selenium Version: 4.39.0
+
+## Deployment
+
+### GitHub Repository
+
+The project is hosted at: https://github.com/iceman1010/js-web-renderer
+
+### Local Deploy Script
+
+The project includes a `deploy.sh` script for deploying to the production server (whisper1):
+
+```bash
+# Deploy to whisper1 server
+./deploy.sh
+```
+
+The script will:
+1. Pull latest code from GitHub on the server
+2. Fix group permissions for the js-web-render group
+
+### Manual Deployment
+
+```bash
+# On the server
+cd /opt/js-web-renderer
+git fetch origin master
+git reset --hard origin/master
+sudo chgrp -R js-web-render /opt/js-web-renderer
+sudo chmod -R g+rw /opt/js-web-renderer
+```
+
+## Testing
+
+The CLI tool is tested as part of the js-web-renderer-REST-API test suite. See the REST API repository for test scripts.
+
+### Running CLI Tests Manually
+
+```bash
+# Test basic render
+python3 /opt/js-web-renderer/bin/fetch-rendered.py https://example.com --wait 3
+
+# Test screenshot
+python3 /opt/js-web-renderer/bin/fetch-rendered.py https://example.com --screenshot /tmp/test.png --wait 3
+
+# Test network capture
+python3 /opt/js-web-renderer/bin/fetch-rendered.py https://example.com --only-network --wait 3
+
+# Test help
+python3 /opt/js-web-renderer/bin/fetch-rendered.py --help
+```
